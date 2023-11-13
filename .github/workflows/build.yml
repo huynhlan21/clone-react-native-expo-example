@@ -6,9 +6,9 @@ name: Build and release Expo app
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v2
-        with: 
+        with:
           node-version: 16.x
           cache: npm
 
@@ -38,7 +38,7 @@ jobs:
         with:
           expo-version: latest
           eas-version: latest
-          token: ${{ secret.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
         run: npm install
@@ -48,7 +48,7 @@ jobs:
 
       - name: GET APK URL from EXPO
         run: eas build:list --json --limit=1 --platform=android | jq -r .[0].artifacts.buildUrl
-        
+
       - name: Store apk download URL in env variable
         run: echo "apk_url=$(eas build:list --json --limit=1 --platform=android | jq -r .[0].artifacts.buildUrl)" >> $GITHUB_ENV
 
@@ -74,7 +74,7 @@ jobs:
         uses: suisei-cn/actions-download-file@v1
         id: downloadfile # Remember to give an ID if you need the output
         with:
-          url: 'Downloading APK from [this](${{ env.apk_url }})!'
+          url: "Downloading APK from [this](${{ env.apk_url }})!"
           target: public/
           auto-match: true
 
@@ -104,7 +104,7 @@ jobs:
           asset_path: ./demo-app.zip
           asset_name: demo-app-v${{ github.run_number }}.zip
           asset_content_type: application/zip
-          
+
   delete-release:
     runs-on: ubuntu-latest
     needs: update
